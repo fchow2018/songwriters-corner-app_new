@@ -1,0 +1,252 @@
+<html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+
+  <!-- set viewport to device width to make site responsive -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- bootstrap css -->
+  <link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <!-- custom styles -->
+  <link rel="stylesheet" type="text/css" href="/styles/home.css">
+  <link rel="stylesheet" type="text/css" href="/styles/style_home.css">
+  <!-- <script type='text/javascript' src='https://app.ticketmaster.com/discovery/v2/events.json?apikey=l9XiABE2P5GIQGAhtFcErCCFoA2Ap9R4'> </script> -->
+  <!-- jQuery library -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+
+  <!-- Latest compiled and minified Bootstrap JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+  <link href="https://fonts.googleapis.com/css?family=Titillium+Web" rel="stylesheet">
+
+  <title>Songwriter's Corner App</title>
+</head>
+<body>
+
+  <!-- header -->
+  <div class="well">
+    <div class="container">
+      <div class="page-header">
+        <h1>Songwriter's Corner <small>Songs. Creativity. Ratings.</small></h1>
+        <% if(!user) { %>
+          <a href="/login">Log in</a>
+          <a href="/signup">Sign up</a>
+        <% } else { %>
+          <div>Welcome, <%= user.username %>!</div>
+          <a href="/logout">Log out</a>
+        <% } %>
+      </div>
+    </div>
+  </div>
+
+  <nav class="navbar navbar-expand navbar-default">
+    <a class="navbar-brand" href="/">Songwriter's Corner</a>
+    <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+    </form>
+      <a class="sign-in" data-toggle="modal" href="#Login">Sign In</a>
+      <a class="faq" href="#">FAQ</a>
+    </nav>
+
+    <div class="modal fade" id="Login" tabindex="-1" role="dialog" aria-labelledby="Login" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Sign In</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form method="POST" action="/home">
+
+
+              <div class="form-group">
+                <label for="username_l" class="col-form-label">Email</label>
+                <input class="form-control" id="email" name='email'/>
+              </div>
+              <div class="form-group">
+                <label for="password_l" class="col-form-label">Password</label>
+                <input type="password" class="form-control" id="password" name='password'/>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn " id='btn_login' >Sign In</button>
+            </form>
+          </div>
+          <p class="forgot-pwd"><a href="#">Forgot Your Password?</a></p>
+          <p class="new-account">New to Songwriter's Corner? <a data-toggle="modal" href="#Signup">Create an account today!</a></p>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="Signup" tabindex="-1" role="dialog" aria-labelledby="Signup" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Sign up</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form method="POST" action="/home">
+
+              <div class="form-group">
+                <label for="first_name" class="col-form-label">First name:</label>
+                <input type="text" class="form-control" id="first_name" name='first_name'>
+              </div>
+              <div class="form-group">
+                <label for="last_name" class="col-form-label">Last name:</label>
+                <input type="text" class="form-control" id="last_name" name='last_name'>
+              </div>
+              <div class="form-group">
+                <label for="username" class="col-form-label">Email:</label>
+                <input class="form-control" id="email_signup" name='email'>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn " id='btn_signup' >Signup</button>
+              </form>
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+      <div class="sidenav">
+        <p><a href="#">Top Rated Lyrics</a></p>
+        <ul>Browse All Lyrics
+          <li><a href="#">Alphabetical</a></li>
+          <li><a href="#">By Genre</a></li>
+          <li><a href="#">By Tags</a></li>
+        </ul>
+      </div>
+
+      <div class="main">
+    <div class="row">
+      <div class="col-md-12">
+
+        <!-- new post form-->
+        <% if(user) { %>
+          <form class="form-inline" id="create-post" method="POST" action="/posts">
+            <div class="form-group">
+              <input type="text" name="title" class="form-control" placeholder="Title" autofocus>
+            </div>
+            <div class="form-group">
+              <input type="text" name="description" class="form-control" placeholder="Description">
+            </div>
+            <div class="form-group">
+              <input type="submit" class="btn btn-default" value="Add Post">
+            </div>
+          </form>
+        <% } %>
+        <br>
+
+        <!-- list of posts -->
+        <ul class="list-group" id="posts-list">
+
+          <% for (let post of posts) { %>
+              <li class="list-group-item post" data-id="<%= post._id %>">
+
+                <!-- post label (title) -->
+                <a href="/posts/<%= post._id %>" class="label label-default"><%= post.title %></a>
+
+                <!-- post description -->
+                <%= post.description %>
+
+                <div class="pull-right">
+                  <!-- pencil icon to toggle update form -->
+                  <a href="javascript:void(0)" data-toggle="collapse" data-target="#update-<%= post._id %>">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                  </a>
+
+                  <!-- trash can icon to delete post -->
+                  <form action="/posts/<%= post._id %>" method="DELETE">
+                    <button>
+                      <span class="glyphicon glyphicon-trash"></span>
+                    </button>
+                  </form>
+                </div>
+
+                <!-- form to update post -->
+                <div class="collapse" id="update-<%= post._id %>">
+                  <br>
+                  <form class="form-inline update-post" action="/posts/<%= post._id %>?_method=PUT" method="POST">
+                    <div class="form-group">
+                      <input type="text" name="title" class="form-control" placeholder="Title" value="<%= post.title %>">
+                    </div>
+                    <div class="form-group">
+                      <input type="text" name="description" class="form-control" placeholder="Description" value="<%= post.description %>">
+                    </div>
+                    <div class="form-group">
+                      <input type="submit" class="btn btn-block btn-default" value="Update">
+                    </div>
+                  </form>
+                </div>
+              </li>
+            <% } %>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!-- <nav class="navbar navbar-expand navbar-default">
+  <a class="navbar-brand" href="/">Songwriter's Corner</a>
+  <form class="form-inline my-2 my-lg-0">
+  <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+</form>
+<div class="dropdown show">
+<a class="btn btn-secondary dropdown-toggle" href="/signup_login" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+My Account
+</a>
+
+<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+<a class="dropdown-item" href="/signup_login">Sign In</a>
+</div>
+</div>
+<li class="nav-item">
+<a class="nav-link" href="#">FAQ</a>
+</li>
+</nav> -->
+
+
+      <!-- list of posts -->
+              <ul class="list-group" id="posts-list">
+
+                <% for (let post of posts) { %>
+                    <li class="list-group-item post" data-id="<%= post._id %>">
+
+                      <!-- post label (title) -->
+                      <a href="/posts/<%= post._id %>" class="label label-default"><%= post.title %></a>
+
+                      <!-- post genre -->
+                      <%= post.genre %>
+
+                      <!-- post lyrics -->
+                      <%= post.lyrics %>
+
+                      <div class="pull-right">
+                        <!-- pencil icon to toggle update form -->
+                        <a href="javascript:void(0)" data-toggle="collapse" data-target="#update-<%= post._id %>">
+                          <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+
+                        <!-- trash can icon to delete post -->
+                        <form action="/posts/<%= post._id %>?_method=DELETE" method="POST">
+                          <button>
+                            <span class="glyphicon glyphicon-trash"></span>
+                          </button>
+                        </form>
+                      </div>
+
+                    </li>
+                  <% } %>
+              </ul>
+    </div>
+  </body>
+  </html>
